@@ -1,10 +1,8 @@
-from email import header
 import zlib
+import struct
 
-from binaryReader import *
-
-from decrypt import *
-from fhm import *
+from .decrypt import *
+from .fhm import *
 
 class DPL():
 

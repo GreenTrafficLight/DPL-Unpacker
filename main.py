@@ -1,44 +1,46 @@
-from dpl import *
-from pac6 import *
+from Containers import *
+from Utilities import *
+
+import argparse, os
+
+# All credits got to the open-horizon repository
+# https://github.com/undefined-darkness/open-horizon
 
 def main():
 
-    #path_to_dpl_file = "E:\\MODDING\\Archive\\_Ace Combat\\Ace Combat Assault Horizon\\unpacked\\target\\DATA.PAC"
-    #path_to_dpl_file = "E:\\MODDING\\Archive\\_Ace Combat\\Machstorm\\DATA00.PAC"
-    path_to_dpl_file = "D:\\EMULATOR\\PS3\\rpcs3-v0.0.23-14031-28803700_win64\\dev_hdd0\\game\\NPUB31347\\USRDIR\\DATA90.PAC"
-    
-    file = open(path_to_dpl_file, 'rb')
-    br = BinaryReader(file, ">")
+    parser = argparse.ArgumentParser()
 
-    dpl = DPL()
-    dpl.open(br)
+    parser.add_argument("-i", "--Input")
+    parser.add_argument("-o", "--Output")
 
-    for i in range(len(dpl.m_infos)):
+    args = parser.parse_args()
 
-        data = dpl.read_file_data(br, i)
+    if args.Input:
 
-        f_out = open("f_out_" + str(i) + ".fhm", "wb")
-        f_out.write(data)
-        f_out.close()
+        file =  args.Input.split("\\")[-1]
+        filename = os.path.splitext(file)[0]
 
-    """
-    path_to_pac6_file = "E:\\MODDING\\Archive\\_Ace Combat\\Ace Combat 6\\Xbox360\\DATA00.PAC"
-    path_to_pac6_tbl = "E:\\MODDING\\Archive\\_Ace Combat\\Ace Combat 6\\Xbox360\\DATA.TBL"
+        try:
+            with open(args.Input, "rb") as f_in:
+                br = BinaryReader(f_in, ">")
 
-    pac6_file = open(path_to_pac6_file, 'rb')
-    pac6_file_br = BinaryReader(pac6_file, ">")
-    
-    pac6 = PAC6_FILE()
-    pac6.open(pac6_file_br, path_to_pac6_tbl)
+                dpl = DPL()
+                dpl.open(br)
 
-    data = pac6.read_file_data(pac6_file_br, 119)
+                for i in range(len(dpl.m_infos)):
 
-    f_out = open("test", "wb")
-    f_out.write(data)
-    f_out.close()
-    """
+                    print(str(i + 1) + " / " + str(len(dpl.m_infos)))
 
-    print("test")
+                    data = dpl.read_file_data(br, i)
+
+                    if args.Output == None:
+                        f_out = open(filename + "_" + str(i) + ".fhm", "wb")
+                    else:
+                        f_out = open(args.Output + "//" + filename + "_" + str(i) + ".fhm", "wb")
+                    f_out.write(data)
+                    f_out.close()
+        except IOError:
+            print('Error While Opening the file!')
 
 
 if __name__ == "__main__":

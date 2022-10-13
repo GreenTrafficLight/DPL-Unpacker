@@ -1,8 +1,7 @@
 import os
 import zlib
 
-from binaryReader import BinaryReader
-from decrypt import decrypt
+from .decrypt import *
 
 class PAC6_FILE:
 
@@ -45,8 +44,6 @@ class PAC6_FILE:
         count = tbl_br.readUInt()
         tomes_count = tbl_br.readUInt()
 
-        #for i in range(tomes_count):
-
         for i in range(count):
 
             info = PAC6_FILE.INFO()
@@ -56,8 +53,6 @@ class PAC6_FILE:
             entry.read(tbl_br, info)
 
             self.m_entries.append(entry)
-
-        print("test")
 
     def read_file_data(self, br, idx):
 

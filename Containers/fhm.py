@@ -1,5 +1,3 @@
-from binaryReader import *
-
 class FHM():
 
     def __init__(self) -> None:
